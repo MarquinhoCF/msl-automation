@@ -84,73 +84,154 @@ RESEARCH_QUESTIONS = [
 ]
 
 # ---------------------------------------------------------------------------
-# STRINGS DE BUSCA
+# STRINGS DE BUSCA  — baseadas na metodologia Kitchenham (quasi-gold standard)
 # (Não sensível — edite aqui mesmo)
+#
+# QUASI-GOLD STANDARD (artigos que TODA string deve recuperar):
+#   - Konovalenko & Hvattum (2024) — DVRP + PPO
+#   - Kavuk et al. (2022)          — despacho ultrarrápido + DRL
+#   - Hildebrandt et al. (2023)    — revisão SDVRP + RL
+#   - Zou et al. (2022)            — entrega de comida + DDQN
+#   - Wang et al. (2018)           — alocação de motoristas + DRL
+#   - Joe & Lau (2020)             — DVRP + DRL + clientes estocásticos
+#   - Turan et al. (2020)          — mobilidade urbana + PPO
+#
+# MAPEAMENTO POR BASE:
+#   SS1  → Scopus, Web of Science  (string completa — 4 blocos AND)
+#   SS2  → Crossref, Semantic Scholar  (sensível — 2 blocos AND, ampla cobertura)
+#   SS3  → Scopus/WoS alternativa balanceada  (3 blocos AND)
+#   SS4  → IEEE Xplore, ACM DL  (foco DVRP + RL)
+#   SS5  → IEEE Xplore, ACM DL  (foco despacho/alocação + RL — complementar a SS4)
+#   SS6  → Semantic Scholar, arXiv  (foco PPO/Policy Gradient + logística)
+#   SS7  → Todas as bases  (Pickup and Delivery + RL)
+#   SS8  → Todas as bases  (simulação de eventos discretos + RL + logística)
 # ---------------------------------------------------------------------------
 SEARCH_STRINGS = [
+    # ------------------------------------------------------------------
+    # SS1 — String COMPLETA (4 blocos AND)
+    # Indicada para: Scopus, Web of Science
+    # Balanceia todos os conceitos do trabalho; valide com o quasi-gold standard
+    # ------------------------------------------------------------------
     {
         "id": "SS1",
-        "descricao": "AR + Roteamento Dinâmico de Veículos",
+        "descricao": "String completa — Última Milha + RL + Roteamento/Despacho + Estocástico",
         "string": (
-            '("reinforcement learning" OR "deep reinforcement learning") '
-            'AND ("dynamic vehicle routing" OR "DVRP" OR "vehicle routing problem")'
+            '("last-mile delivery" OR "last mile delivery" OR "last-mile logistics" '
+            'OR "final mile delivery" OR "food delivery") '
+            'AND ("reinforcement learning" OR "deep reinforcement learning" '
+            'OR "proximal policy optimization" OR "PPO" OR "policy gradient" '
+            'OR "deep Q-learning" OR "DQN" OR "Markov decision process" OR "MDP") '
+            'AND ("vehicle routing" OR "dynamic vehicle routing" OR "DVRP" '
+            'OR "driver allocation" OR "order dispatching" OR "delivery dispatching" '
+            'OR "rider assignment" OR "courier allocation") '
+            'AND ("stochastic" OR "stochastic demand" OR "dynamic" OR "uncertainty")'
         ),
     },
+
+    # ------------------------------------------------------------------
+    # SS2 — String SENSÍVEL / ampla (2 blocos AND)
+    # Indicada para: Crossref, Semantic Scholar (bases sem suporte a queries longas)
+    # Alta revocação, menor precisão — complementa SS1
+    # ------------------------------------------------------------------
     {
         "id": "SS2",
-        "descricao": "AR + Entrega de Última Milha",
+        "descricao": "Sensível — Última Milha + RL (2 blocos AND)",
         "string": (
-            '("reinforcement learning" OR "deep reinforcement learning") '
-            'AND ("last-mile delivery" OR "last mile delivery" OR "last-mile logistics")'
+            '("last-mile delivery" OR "last mile delivery" OR "final mile delivery" '
+            'OR "food delivery logistics") '
+            'AND ("reinforcement learning" OR "deep reinforcement learning" '
+            'OR "proximal policy optimization")'
         ),
     },
+
+    # ------------------------------------------------------------------
+    # SS3 — String BALANCEADA (3 blocos AND)
+    # Indicada para: Scopus/WoS como alternativa à SS1; Springer Nature
+    # ------------------------------------------------------------------
     {
         "id": "SS3",
-        "descricao": "PPO/Policy Gradient + Logística/Roteamento",
+        "descricao": "Balanceada — Última Milha + RL + Roteamento/Despacho (3 blocos AND)",
         "string": (
-            '("proximal policy optimization" OR "PPO" OR "policy gradient" OR "actor-critic") '
-            'AND ("vehicle routing" OR "logistics" OR "delivery" OR "dispatching")'
+            '("last-mile delivery" OR "last mile delivery" OR "food delivery logistics") '
+            'AND ("reinforcement learning" OR "deep reinforcement learning" '
+            'OR "Markov decision process") '
+            'AND ("vehicle routing" OR "driver allocation" OR "order dispatching")'
         ),
     },
+
+    # ------------------------------------------------------------------
+    # SS4 — Foco em DVRP + RL
+    # Indicada para: IEEE Xplore, ACM Digital Library
+    # ------------------------------------------------------------------
     {
         "id": "SS4",
-        "descricao": "MDP + Logística/Roteamento",
+        "descricao": "DVRP Estocástico + RL (IEEE/ACM)",
         "string": (
-            '("Markov decision process" OR "MDP") '
-            'AND ("vehicle routing" OR "last-mile" OR "order dispatching" OR "driver allocation")'
+            '("dynamic vehicle routing" OR "DVRP" OR "stochastic vehicle routing" '
+            'OR "stochastic dynamic vehicle routing" OR "SDVRP") '
+            'AND ("reinforcement learning" OR "deep reinforcement learning" '
+            'OR "proximal policy optimization" OR "PPO")'
         ),
     },
+
+    # ------------------------------------------------------------------
+    # SS5 — Foco em Despacho/Alocação + RL (complementar a SS4)
+    # Indicada para: IEEE Xplore, ACM Digital Library
+    # ------------------------------------------------------------------
     {
         "id": "SS5",
-        "descricao": "DVRP Estocástico + Inteligência Artificial",
+        "descricao": "Despacho/Alocação de motoristas + RL (IEEE/ACM)",
         "string": (
-            '("stochastic dynamic vehicle routing" OR "SDVRP") '
-            'AND ("machine learning" OR "reinforcement learning" OR "artificial intelligence")'
+            '("order dispatching" OR "driver allocation" OR "rider assignment" '
+            'OR "delivery dispatching" OR "courier allocation") '
+            'AND ("reinforcement learning" OR "deep reinforcement learning" '
+            'OR "Markov decision process") '
+            'AND ("stochastic" OR "dynamic")'
         ),
     },
+
+    # ------------------------------------------------------------------
+    # SS6 — Foco em PPO / Policy Gradient + Logística
+    # Indicada para: Semantic Scholar, arXiv (forte cobertura de preprints DRL)
+    # ------------------------------------------------------------------
     {
         "id": "SS6",
-        "descricao": "Pickup and Delivery + AR",
+        "descricao": "PPO/Policy Gradient + Logística/Roteamento",
         "string": (
-            '("pickup and delivery" OR "PDP") '
-            'AND ("reinforcement learning" OR "deep reinforcement learning")'
+            '("proximal policy optimization" OR "PPO" OR "policy gradient" '
+            'OR "actor-critic" OR "SAC" OR "soft actor-critic") '
+            'AND ("vehicle routing" OR "logistics" OR "delivery" OR "dispatching" '
+            'OR "last-mile")'
         ),
     },
+
+    # ------------------------------------------------------------------
+    # SS7 — Pickup and Delivery + RL
+    # Indicada para: todas as bases
+    # Cobre a dimensão PDP do trabalho, frequentemente indexada separadamente
+    # ------------------------------------------------------------------
     {
         "id": "SS7",
-        "descricao": "Despacho de pedidos + AR Profundo",
+        "descricao": "Pickup and Delivery Problem + RL",
         "string": (
-            '("order dispatching" OR "ride dispatching" OR "driver dispatching") '
-            'AND ("deep reinforcement learning" OR "DQN" OR "PPO" OR "DDQN")'
+            '("pickup and delivery" OR "pickup-and-delivery" OR "PDP") '
+            'AND ("reinforcement learning" OR "deep reinforcement learning" '
+            'OR "Markov decision process")'
         ),
     },
+
+    # ------------------------------------------------------------------
+    # SS8 — Simulação de Eventos Discretos + RL + Logística
+    # Indicada para: todas as bases
+    # Cobre a contribuição metodológica do simulador do trabalho
+    # ------------------------------------------------------------------
     {
         "id": "SS8",
-        "descricao": "Simulação de Eventos Discretos + AR + Logística",
+        "descricao": "Simulação de Eventos Discretos + RL + Logística",
         "string": (
-            '("discrete event simulation" OR "simulation environment") '
+            '("discrete event simulation" OR "simulation environment" OR "SimPy") '
             'AND ("reinforcement learning") '
-            'AND ("logistics" OR "delivery" OR "routing")'
+            'AND ("logistics" OR "delivery" OR "routing" OR "vehicle routing")'
         ),
     },
 ]

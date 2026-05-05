@@ -275,5 +275,6 @@ def exportar_excel(
     _aba_artigos(wb, artigos_dedup, "  Sem Duplicatas", incluir_triagem=True)
     _aba_resumo(wb, artigos_brutos, artigos_dedup, contagem_base, contagem_string)
 
+    os.makedirs(os.path.dirname(caminho_saida) or ".", exist_ok=True)
     wb.save(caminho_saida)
     print(f"\n    Excel salvo em: {caminho_saida}")

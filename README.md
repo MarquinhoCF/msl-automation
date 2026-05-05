@@ -43,7 +43,10 @@ git clone git@github.com:MarquinhoCF/msl-automation.git
 ```bash
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate    # Windows
+
+# Windows
+Set-ExecutionPolicy -Scope Process Bypass
+venv\Scripts\activate
 ```
 
 3. Instale as dependências:
