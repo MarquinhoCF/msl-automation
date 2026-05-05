@@ -1,13 +1,6 @@
 # =============================================================================
 # CONFIGURAÇÃO DO MAPEAMENTO SISTEMÁTICO DA LITERATURA (MSL)
 # =============================================================================
-# Baseado no artigo: "Entrega de Última Milha sob Incerteza: Simulação e
-# Solução com Aprendizado por Reforço e Heurísticas" (SBPO 2026)
-#
-# ⚙️  Configurações sensíveis (chaves de API, e-mail) ficam no arquivo .env.
-#     Copie .env.example → .env e preencha antes de executar.
-#     Todas as demais configurações podem ser editadas diretamente aqui.
-# =============================================================================
 
 from __future__ import annotations
 import os
@@ -85,26 +78,6 @@ RESEARCH_QUESTIONS = [
 
 # ---------------------------------------------------------------------------
 # STRINGS DE BUSCA  — baseadas na metodologia Kitchenham (quasi-gold standard)
-# (Não sensível — edite aqui mesmo)
-#
-# QUASI-GOLD STANDARD (artigos que TODA string deve recuperar):
-#   - Konovalenko & Hvattum (2024) — DVRP + PPO
-#   - Kavuk et al. (2022)          — despacho ultrarrápido + DRL
-#   - Hildebrandt et al. (2023)    — revisão SDVRP + RL
-#   - Zou et al. (2022)            — entrega de comida + DDQN
-#   - Wang et al. (2018)           — alocação de motoristas + DRL
-#   - Joe & Lau (2020)             — DVRP + DRL + clientes estocásticos
-#   - Turan et al. (2020)          — mobilidade urbana + PPO
-#
-# MAPEAMENTO POR BASE:
-#   SS1  → Scopus, Web of Science  (string completa — 4 blocos AND)
-#   SS2  → Crossref, Semantic Scholar  (sensível — 2 blocos AND, ampla cobertura)
-#   SS3  → Scopus/WoS alternativa balanceada  (3 blocos AND)
-#   SS4  → IEEE Xplore, ACM DL  (foco DVRP + RL)
-#   SS5  → IEEE Xplore, ACM DL  (foco despacho/alocação + RL — complementar a SS4)
-#   SS6  → Semantic Scholar, arXiv  (foco PPO/Policy Gradient + logística)
-#   SS7  → Todas as bases  (Pickup and Delivery + RL)
-#   SS8  → Todas as bases  (simulação de eventos discretos + RL + logística)
 # ---------------------------------------------------------------------------
 SEARCH_STRINGS = [
     # ------------------------------------------------------------------
@@ -238,7 +211,6 @@ SEARCH_STRINGS = [
 
 # ---------------------------------------------------------------------------
 # CRITÉRIOS DE INCLUSÃO, EXCLUSÃO E QUALIDADE
-# (Não sensível — edite aqui mesmo)
 # ---------------------------------------------------------------------------
 INCLUSION_CRITERIA = [
     "IC1: O estudo aborda Aprendizado por Reforço (clássico ou profundo) aplicado a problemas de roteamento de veículos ou logística de entrega.",

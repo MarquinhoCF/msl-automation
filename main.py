@@ -239,11 +239,6 @@ def main():
     logger.log(f"\n{'='*60}")
     logger.log(f"    CONCLUÍDO em {duracao//60}min {duracao%60}s")
     logger.log(f"  Artigos para triagem: {len(artigos_finais)}")
-    logger.log(f"  Próximos passos MSL:")
-    logger.log(f"    1. Triagem por título/resumo (coluna 'Triagem Título/Resumo')")
-    logger.log(f"    2. Leitura do texto completo dos aceitos")
-    logger.log(f"    3. Reaplicação dos critérios de inclusão/exclusão")
-    logger.log(f"    4. Extração dos dados (QC1–QC4 + RQ1–RQ5)")
     logger.log(f"{'='*60}")
     logger.close()
 

@@ -45,33 +45,53 @@ class SemanticScholarSearcher(BaseSearcher):
 
         return list(vistos.values())
 
-    def _expandir_query(self, query: str) -> list[str]:
+    def _expandir_query(self, query: str, max_sub_queries: int = 50) -> list[str]:
         """
-        Transforma uma query booleana em queries simples via produto cartesiano.
+        Expande query booleana em sub-queries simples para a API do S2.
 
-        '("pickup and delivery" OR "PDP") AND ("reinforcement learning" OR "MDP")'
-        →  ['"pickup and delivery" "reinforcement learning"',
-            '"pickup and delivery" "MDP"',
-            '"PDP" "reinforcement learning"',
-            '"PDP" "MDP"']
+        Estratégia "âncora + variações" (crescimento linear):
+        - Âncora: primeira opção de cada grupo → 1 query
+        - Para cada grupo, varia suas opções mantendo os demais na âncora
+
+        Exemplo com 3 grupos [A1,A2], [B1,B2,B3], [C1,C2]:
+        Âncora:  A1 B1 C1
+        Var G1:  A2 B1 C1
+        Var G2:  A1 B2 C1 | A1 B3 C1
+        Var G3:  A1 B1 C2
+        Total: 6 queries  (vs 12 no produto cartesiano)
+
+        Se mesmo assim ultrapassar max_sub_queries, trunca com aviso.
         """
-        # Extrai cada grupo entre parênteses
         grupos = re.findall(r'\(([^)]+)\)', query)
 
         if not grupos:
-            # Sem parênteses: devolve a string limpa de operadores residuais
             limpa = re.sub(r'\b(AND|OR|NOT)\b', '', query).strip()
             return [limpa] if limpa else [query]
 
-        # Cada grupo vira uma lista de termos separados por OR
+        # Cada grupo → lista de termos
         opcoes = []
         for grupo in grupos:
             termos = [t.strip() for t in re.split(r'\bOR\b', grupo) if t.strip()]
             opcoes.append(termos)
 
-        # Produto cartesiano: um termo de cada grupo
-        combinacoes = itertools.product(*opcoes)
-        return [' '.join(combo) for combo in combinacoes]
+        ancora = [termos[0] for termos in opcoes]   # primeiro termo de cada grupo
+
+        queries = set()
+        queries.add(' '.join(ancora))               # query âncora
+
+        for i, termos in enumerate(opcoes):
+            for termo in termos[1:]:                # pula o [0], já está na âncora
+                variacao = ancora.copy()
+                variacao[i] = termo
+                queries.add(' '.join(variacao))
+
+        queries = list(queries)
+
+        if len(queries) > max_sub_queries:
+            print(f"\n    ⚠  {len(queries)} sub-queries geradas; truncando para {max_sub_queries}.")
+            queries = queries[:max_sub_queries]
+
+        return queries
 
     def _padrao(self, ss, filtros, headers):
         artigos, offset = [], 0
